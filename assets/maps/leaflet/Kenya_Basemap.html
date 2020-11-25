@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8 />
+<title>Kenya Basemap</title>
+<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+<script src='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.js'></script>
+<link href='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.css' rel='stylesheet' />
+<style>
+  body { margin:0; padding:0; }
+  #map { position:absolute; top:0; bottom:0; width:100%; }
+</style>
+</head>
+<body>
+<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.2.0/leaflet-omnivore.min.js'></script>
+<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
+<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
+<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.2.0/leaflet-omnivore.min.js'></script>
+<style>
+hr.beautiful-line{
+  border-top: 1px solid #999; 
+  width: 100%;
+  background-position: center center;
+}
+hr.roads{
+  border-top: 1px solid red; 
+  width: 100%;
+  background-position: center center;
+}
+/*Legend specific*/
+.legend {
+  padding: 6px 8px;
+  font: 12px Arial, Helvetica, sans-serif;
+  background: white;
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  line-height: 30px;
+  color: black;
+}
+.legend h4 {
+  text-align: left;
+  color: black;
+}
+
+.legend span {
+  position: relative;
+  padding: 6px 12px;
+
+}
+.legend span-q {
+  position: relative;
+  padding: 120px 12px;
+
+
+}
+
+.legend i {
+  width: 25px;
+  height: 25px;
+  float: left;
+  margin: 0 8px 0 3px;
+  opacity: 1;
+  border: 2px solid white;
+box-shadow: 0 0 15px rgba(0,0,0, 0.4);
+}
+.legend i-a {
+  width: 10px;
+  height: 10px;
+  float: left;
+  margin: 0 16px 0 10.5px;
+  opacity: 1;
+  border: 2px solid white;
+  border-radius: 50%;
+box-shadow: 0 0 15px rgba(0,0,0, 0.4);
+}
+.legend i-b {
+  width: 15px;
+  height: 15px;
+  float: left;
+  margin: 0 10px 0 8.25px;
+  opacity: 1;
+  border: 2px solid white;
+  border-radius: 50%;
+box-shadow: 0 0 15px rgba(0,0,0, 0.4);
+}
+.legend i-c {
+  width: 20px;
+  height: 20px;
+  float: left;
+  margin: 0 9px 0 5.75px;
+  opacity: 1;
+  border: 2px solid white;
+  border-radius: 50%;
+box-shadow: 0 0 15px rgba(0,0,0, 0.4);
+}
+.legend i-d {
+  width: 25px;
+  height: 25px;
+  float: left;
+  margin: 0 5px 0 4.25px;
+  opacity: 1;
+  border: 2px solid white;
+  border-radius: 50%;
+box-shadow: 0 0 15px rgba(0,0,0, 0.4);
+}
+.legend i-e {
+  width: 35px;
+  height: 35px;
+  float: left;
+  margin: 0 -4px 0 0px;
+  opacity: 1;
+  border: 2px solid white;
+  border-radius: 50%;
+box-shadow: 0 0 15px rgba(0,0,0, 0.4);
+}
+.legend i-f {
+    width: 100%;
+  height: 5px;
+  float: left;
+  margin: 0 0 -100px 0;
+  opacity: 1;
+  border: 2px solid white;
+
+}
+
+
+.legend .icon {
+  background-size: 20px;
+  background-color: rgba(255, 255, 255, 0);
+  background-position: center;
+}
+
+#loader {
+    position:absolute; top:0; bottom:0; width:100%;
+  	background-image: url("asset/img/Webp.net-resizeimage (2).gif");
+      background-color: rgba(255, 255, 255, 0);
+  	background-repeat:no-repeat;
+	background-position: center center;
+    transition:background 1s ease-out;
+    -webkit-transition:background 1s ease-out;
+}
+#loader.done {
+    background:rgba(255, 255, 255, 0);
+}
+#loader.hide {
+    display:none;
+}
+#loader .message {
+    position:absolute;
+    left:50%;
+    top:50%;
+}
+</style>
+<div id='map'></div>
+<div id='loader'><span class='message'></span></div>
+<script>
+L.mapbox.accessToken = 'pk.eyJ1IjoidW5ydW5ndW1hIiwiYSI6ImNraDMzdHFybDBsMGozMGxzbnNjODJrdWMifQ.xSO0uCJfC4jND_q5-b2TAA';
+var loader = document.getElementById('loader');
+
+var map = L.mapbox.map('map')
+    .setView([-0.0236, 37.9062], 6)
+// start the loading screen
+startLoading();
+
+// Add a tile layer with a loading animation
+L.mapbox.styleLayer('mapbox://styles/unrunguma/ckhw8jy0914hx19pqe3aaem6o')
+
+    .addTo(map) // add your tiles to the map
+
+
+
+    .on('load', finishedLoading); // when the tiles load, remove the screen
+
+
+//Legend
+/*Legend specific*/
+var legend = L.control({ position: "bottomright" });
+
+legend.onAdd = function(map) {
+  var div = L.DomUtil.create("div", "legend");
+  div.innerHTML += "<u><h4>Legend</h4></u>";
+  div.innerHTML += "<u><p>Cities & Towns</p></u>";
+  div.innerHTML += "<u><small><p>According to Population Size(2019)</small><p></u>";
+  div.innerHTML += '<i-a style="background: brown"></i-a><span>40000-115000</span><br>'
+  div.innerHTML += '<i-b style="background: brown"></i-b><span>115000-250000</span><br>'
+  div.innerHTML += '<i-c style="background: brown"></i-c><span>250000-570000</span><br>'
+  div.innerHTML += '<i-d style="background: brown"></i-d><span>570000-1200000</span><br>'
+  div.innerHTML += '<i-e style="background: brown"></i-e><span>1200000-4400000</span><br>'
+  div.innerHTML += '<br>'
+  div.innerHTML += '<i class="icon" style="background-image: url(map-icons-master_2/map-icons-master/src/icons/airport.svg);background-repeat: no-repeat;"></i><span>Major Airports</span><br>';
+  div.innerHTML += '<i class="icon" style="background-image: url(map-icons-master_2/map-icons-master/src/icons/campground.svg);background-repeat: no-repeat;"></i><span>Refugee Camps</span><br>';
+  
+ 
+  
+  
+
+  return div;
+};
+
+legend.addTo(map);
+
+
+
+// Towns and cities
+var popData = {
+"type": "FeatureCollection",
+"name": "Towns",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::4210" } },
+"features": [
+{ "type": "Feature", "properties": { "TOWN": "Busia", "POP_2019": 71886, "Proj_2030": 89670, "Radius": 4.0 }, "geometry": { "type": "Point", "coordinates": [ 34.104836432210696, 0.468390133788844 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Migori", "POP_2019": 71668, "Proj_2030": 89398, "Radius": 4.0 }, "geometry": { "type": "Point", "coordinates": [ 34.462975863904838, -1.059199802220427 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Bungoma", "POP_2019": 68031, "Proj_2030": 84862, "Radius": 4.0 }, "geometry": { "type": "Point", "coordinates": [ 34.553402605492209, 0.570523293035342 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Kisii", "POP_2019": 112417, "Proj_2030": 140229, "Radius": 4.0 }, "geometry": { "type": "Point", "coordinates": [ 34.782930760121296, -0.664987888667172 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Kisumu", "POP_2019": 397957, "Proj_2030": 496412, "Radius": 11.0 }, "geometry": { "type": "Point", "coordinates": [ 34.769876725626794, -0.081128197973981 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Kimilili", "POP_2019": 56050, "Proj_2030": 69916, "Radius": 4.0 }, "geometry": { "type": "Point", "coordinates": [ 34.715677961894116, 0.785804024046925 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Kakamega", "POP_2019": 107227, "Proj_2030": 133755, "Radius": 4.0 }, "geometry": { "type": "Point", "coordinates": [ 34.750314883675514, 0.291215983700205 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Kitale", "POP_2019": 162174, "Proj_2030": 202296, "Radius": 7.0 }, "geometry": { "type": "Point", "coordinates": [ 35.002059469226815, 1.022448613088392 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Kericho", "POP_2019": 53804, "Proj_2030": 67115, "Radius": 4.0 }, "geometry": { "type": "Point", "coordinates": [ 35.289787551603766, -0.353571784467004 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Eldoret", "POP_2019": 475716, "Proj_2030": 593409, "Radius": 11.0 }, "geometry": { "type": "Point", "coordinates": [ 35.277539895836284, 0.534556526410951 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Nakuru", "POP_2019": 570674, "Proj_2030": 711860, "Radius": 14.0 }, "geometry": { "type": "Point", "coordinates": [ 36.076415657413037, -0.290385319444848 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Lodwar", "POP_2019": 82970, "Proj_2030": 103497, "Radius": 4.0 }, "geometry": { "type": "Point", "coordinates": [ 35.616983801107629, 3.135301533719446 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Gilgil", "POP_2019": 60711, "Proj_2030": 75731, "Radius": 4.0 }, "geometry": { "type": "Point", "coordinates": [ 36.310699155067262, -0.501778104937862 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Naivasha", "POP_2019": 198444, "Proj_2030": 247539, "Radius": 7.0 }, "geometry": { "type": "Point", "coordinates": [ 36.443505031065939, -0.72405938350438 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Limuru", "POP_2019": 81316, "Proj_2030": 101433, "Radius": 4.0 }, "geometry": { "type": "Point", "coordinates": [ 36.625193480839712, -1.102563860482504 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Kikuyu", "POP_2019": 323881, "Proj_2030": 404010, "Radius": 11.0 }, "geometry": { "type": "Point", "coordinates": [ 36.653877209495697, -1.23329906367619 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Ngong", "POP_2019": 102323, "Proj_2030": 127638, "Radius": 4.0 }, "geometry": { "type": "Point", "coordinates": [ 36.647261972111316, -1.351997821528504 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Kiserian", "POP_2019": 76903, "Proj_2030": 95929, "Radius": 4.0 }, "geometry": { "type": "Point", "coordinates": [ 36.680583286826348, -1.419111811881128 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Kiambu", "POP_2019": 147870, "Proj_2030": 184453, "Radius": 7.0 }, "geometry": { "type": "Point", "coordinates": [ 36.828366289743414, -1.156885312593238 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Githunguri", "POP_2019": 63319, "Proj_2030": 78984, "Radius": 4.0 }, "geometry": { "type": "Point", "coordinates": [ 36.779628178309025, -1.047026468994578 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Nairobi", "POP_2019": 4397073, "Proj_2030": 5484921, "Radius": 18.0 }, "geometry": { "type": "Point", "coordinates": [ 36.880204980102249, -1.289677786362438 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Karuri", "POP_2019": 194342, "Proj_2030": 242422, "Radius": 7.0 }, "geometry": { "type": "Point", "coordinates": [ 36.740302262897664, -1.157293323439354 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Ongata Rongai", "POP_2019": 172569, "Proj_2030": 215263, "Radius": 7.0 }, "geometry": { "type": "Point", "coordinates": [ 36.752305444903755, -1.383863198077592 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Nyeri", "POP_2019": 80081, "Proj_2030": 99893, "Radius": 4.0 }, "geometry": { "type": "Point", "coordinates": [ 36.946263958973063, -0.419961500260961 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Juja", "POP_2019": 156041, "Proj_2030": 194645, "Radius": 7.0 }, "geometry": { "type": "Point", "coordinates": [ 37.008617869871934, -1.100064065449535 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Ruiru", "POP_2019": 490120, "Proj_2030": 611377, "Radius": 11.0 }, "geometry": { "type": "Point", "coordinates": [ 36.960037784932439, -1.139216133944987 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Nanyuki", "POP_2019": 72813, "Proj_2030": 90827, "Radius": 4.0 }, "geometry": { "type": "Point", "coordinates": [ 37.067489313935198, 0.01931921710704 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Thika", "POP_2019": 251407, "Proj_2030": 313605, "Radius": 11.0 }, "geometry": { "type": "Point", "coordinates": [ 37.059872445252182, -1.033947901977202 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Embu", "POP_2019": 64979, "Proj_2030": 81054, "Radius": 4.0 }, "geometry": { "type": "Point", "coordinates": [ 37.446227594607656, -0.523915772132989 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Isiolo", "POP_2019": 78650, "Proj_2030": 98108, "Radius": 4.0 }, "geometry": { "type": "Point", "coordinates": [ 37.571235849715265, 0.357394312802366 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Meru", "POP_2019": 80191, "Proj_2030": 100030, "Radius": 4.0 }, "geometry": { "type": "Point", "coordinates": [ 37.644470582559052, 0.054311735079905 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Voi", "POP_2019": 53353, "Proj_2030": 66552, "Radius": 4.0 }, "geometry": { "type": "Point", "coordinates": [ 38.571412599121274, -3.363713760936601 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Mombasa", "POP_2019": 1208333, "Proj_2030": 1507278, "Radius": 18.0 }, "geometry": { "type": "Point", "coordinates": [ 39.669852612788048, -4.057580268074746 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Garissa", "POP_2019": 163399, "Proj_2030": 203824, "Radius": 7.0 }, "geometry": { "type": "Point", "coordinates": [ 39.629065049231855, -0.443616108572394 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Kilifi", "POP_2019": 74270, "Proj_2030": 92644, "Radius": 4.0 }, "geometry": { "type": "Point", "coordinates": [ 39.864051629054778, -3.595488055903884 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Malindi", "POP_2019": 119859, "Proj_2030": 149512, "Radius": 7.0 }, "geometry": { "type": "Point", "coordinates": [ 40.114719447039484, -3.183398593693218 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Wajir", "POP_2019": 90116, "Proj_2030": 112410, "Radius": 4.0 }, "geometry": { "type": "Point", "coordinates": [ 40.057254745021929, 1.746228225234833 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Elwak", "POP_2019": 60732, "Proj_2030": 75757, "Radius": 4.0 }, "geometry": { "type": "Point", "coordinates": [ 40.928257407199524, 2.812194638492953 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Mandera", "POP_2019": 114718, "Proj_2030": 143099, "Radius": 4.0 }, "geometry": { "type": "Point", "coordinates": [ 41.866247982962904, 3.928711560531281 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Machakos", "POP_2019": 63767, "Proj_2030": 79543, "Radius": 4.0 }, "geometry": { "type": "Point", "coordinates": [ 37.251208536559382, -1.514836117436329 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Kitengela", "POP_2019": 154436, "Proj_2030": 192643, "Radius": 7.0 }, "geometry": { "type": "Point", "coordinates": [ 36.955806003255354, -1.481671216235406 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Ukunda", "POP_2019": 77686, "Proj_2030": 96905, "Radius": 4.0 }, "geometry": { "type": "Point", "coordinates": [ 39.566346059034437, -4.287198255137368 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Wanguru", "POP_2019": 51722, "Proj_2030": 64518, "Radius": 4.0 }, "geometry": { "type": "Point", "coordinates": [ 37.276900248765116, -0.75587868728048 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Mtwapa", "POP_2019": 90677, "Proj_2030": 113110, "Radius": 4.0 }, "geometry": { "type": "Point", "coordinates": [ 39.748001249060231, -3.94396694710674 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Mlolongo", "POP_2019": 136351, "Proj_2030": 170084, "Radius": 7.0 }, "geometry": { "type": "Point", "coordinates": [ 36.92894671970776, -1.378753317856262 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Narok", "POP_2019": 65430, "Proj_2030": 81617, "Radius": 4.0 }, "geometry": { "type": "Point", "coordinates": [ 35.87545027379749, -1.090186662979464 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Athi River", "POP_2019": 81302, "Proj_2030": 101416, "Radius": 4.0 }, "geometry": { "type": "Point", "coordinates": [ 36.979481640263373, -1.455021252970104 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Mumias", "POP_2019": 41942, "Proj_2030": 52318, "Radius": null }, "geometry": { "type": "Point", "coordinates": [ 34.496307421303129, 0.332261686050778 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Kapsabet", "POP_2019": 41997, "Proj_2030": 52387, "Radius": 4.0 }, "geometry": { "type": "Point", "coordinates": [ 35.100417949581399, 0.203086452519628 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Njoro", "POP_2019": 42173, "Proj_2030": 52606, "Radius": 4.0 }, "geometry": { "type": "Point", "coordinates": [ 35.944615117713361, -0.334041939058997 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Webuye", "POP_2019": 42642, "Proj_2030": 53191, "Radius": 4.0 }, "geometry": { "type": "Point", "coordinates": [ 34.759396377436239, 0.608050100061802 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Murang'a", "POP_2019": 43314, "Proj_2030": 54030, "Radius": 4.0 }, "geometry": { "type": "Point", "coordinates": [ 37.155930015983387, -0.723258332700253 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Masalani", "POP_2019": 43642, "Proj_2030": 54439, "Radius": 4.0 }, "geometry": { "type": "Point", "coordinates": [ 40.171611305552602, -1.695966128810307 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Kenol", "POP_2019": 44086, "Proj_2030": 54993, "Radius": 4.0 }, "geometry": { "type": "Point", "coordinates": [ 37.124979176950049, -0.939287614535416 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Homabay", "POP_2019": 44949, "Proj_2030": 56069, "Radius": 4.0 }, "geometry": { "type": "Point", "coordinates": [ 34.454430774739834, -0.550840605333622 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Moyale", "POP_2019": 47850, "Proj_2030": 59688, "Radius": 4.0 }, "geometry": { "type": "Point", "coordinates": [ 39.053155574182931, 3.519361289820643 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Molo", "POP_2019": 48356, "Proj_2030": 60319, "Radius": 4.0 }, "geometry": { "type": "Point", "coordinates": [ 35.730190690320825, -0.246754411767287 ] } },
+{ "type": "Feature", "properties": { "TOWN": "Habasweni", "POP_2019": 49599, "Proj_2030": 61869, "Radius": 4.0 }, "geometry": { "type": "Point", "coordinates": [ 39.490214971733884, 1.014121975222185 ] } }
+]
+}
+
+function areaStyle(){
+  return {
+    fillColor: '#00000000',
+    weight: 0.2,
+    opacity: 1,
+    color: 'black',
+
+    fillOpacity: 0.5
+ }
+};
+
+ 
+var pop = L.geoJson(popData, {
+    pointToLayer: function(feature, latlng) {
+                return L.circleMarker(latlng, {
+            // Here we use the `count` property in GeoJSON verbatim: if it's
+            // to small or two large, we can use basic math in Javascript to
+            // adjust it so that it fits the map better.
+            radius: feature.properties.Radius,
+            color: 'white',
+            opacity: 0.4,
+            fillColor:'brown',
+            fillOpacity: 0.5,
+            
+                       
+        })
+
+    }
+}).addTo(map)
+//Objects.
+var airports = L.icon({
+    iconUrl: 'map-icons-master_2/map-icons-master/src/icons/airport.svg',
+    iconSize:     [15, 19],
+
+    popupAnchor:  [-3, -76] 
+});
+
+var airportmarker = omnivore.kml('https://raw.githubusercontent.com/Runguma/spatialstorage/master/international_airports.kml')
+    .on('ready', function() {
+        airportmarker.eachLayer(function(layer) {
+
+            if (layer instanceof L.Marker) {
+                layer.setIcon(airports);
+            }
+             layer.bindPopup(layer.feature.properties.Level);
+        });
+    })
+    .addTo(map);
+var refugee = L.icon({
+    iconUrl: 'map-icons-master_2/map-icons-master/src/icons/campground.svg',
+    iconSize:     [15, 19],
+
+    popupAnchor:  [-3, -76] 
+});
+
+var camp = omnivore.kml('https://raw.githubusercontent.com/Runguma/spatialstorage/master/Kenya_Refugee_camps.kml')
+    .on('ready', function() {
+        camp.eachLayer(function(layer) {
+
+            if (layer instanceof L.Marker) {
+                layer.setIcon(refugee);
+            }
+             layer.bindPopup(layer.feature.properties.Id);
+        });
+    })
+    .addTo(map);
+
+//Controls
+L.mapbox.geocoderControl('mapbox.places')
+    .addTo(map)
+// L.control.scale() is included in Leaflet see
+// https://www.mapbox.com/mapbox.js/api/v3.3.1/l-control-scale/
+L.control.scale().addTo(map);
+
+
+
+
+
+
+
+//Loading JS
+function startLoading() {
+    loader.className = '';
+}
+
+function finishedLoading() {
+    // first, toggle the class 'done', which makes the loading screen
+    // fade out
+    loader.className = 'done';
+    setTimeout(function() {
+        // then, after a half-second, add the class 'hide', which hides
+        // it completely and ensures that the user can interact with the
+        // map again.
+        loader.className = 'hide';
+    }, 500);
+}
+</script>
+</body>
+</html>

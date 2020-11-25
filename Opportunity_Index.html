@@ -1,0 +1,360 @@
+<!DOCTYPE HTML>
+
+<html class="no-js">
+	<head>
+		<title>Spatial Data Portal</title>
+		<link rel = "icon" href =  "assets/img/UNICON.png" type = "image/x-icon"> 
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<link rel="stylesheet" type="text/css" href="assets/css/words.css"/>
+		<link rel="stylesheet" type="text/css" href="assets/css/cards.css"/>
+
+	</head>
+	<style>
+	/* Header/Logo Title */
+.header-a {
+  padding: 60px;
+  text-align: center;
+  background-image: linear-gradient(to right,#2193b0, #6dd5ed);
+  color: white;
+  font-size: 30px;
+}
+
+.footer-a{
+
+   position: fixed;
+   left: 0;
+   bottom: 0;
+   width: 100%;
+   background-color: red;
+   color: white;
+   text-align: center;
+
+
+}
+iframe {
+
+  padding: 0px;
+  width: 100%;
+  height:550px;
+
+  /* only for demonstration, should be removed */
+}
+<style>
+/*DropDown*/
+
+
+.dropdown .dropbtn {
+  position: relative;
+  display: inline-block;
+}
+
+
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 222.5px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: center;
+}
+
+.dropdown-content a:hover {
+  background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+</style>
+<style>
+.collapsible {
+  background-color: #777;
+  color: white;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+}
+
+.active, .collapsible:hover {
+  background-color: blue;
+}
+
+.content {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  background-color: white;
+}
+</style>
+<style>
+/* Paste this css to your style sheet file or under head tag */
+/* This only works with JavaScript, 
+if it's not present, don't show loader */
+.no-js #loader { display: none;  }
+.js #loader { display: block; position: absolute; left: 100px; top: 0; }
+.se-pre-con {
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	z-index: 9999;
+	background: url(images/loader-64x/Preloader_2.gif) center no-repeat #fff;
+}
+
+</style>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.2/modernizr.js"></script>
+<script>
+	//paste this code under head tag or in a seperate js file.
+	// Wait for window load
+	$(window).load(function() {
+		// Animate loader off screen
+		$(".se-pre-con").fadeOut("slow");;
+	});
+</script>
+
+	<body class="single is-preload">
+
+				<div class="header-a">
+      <h1>Spatial Data Portal</h1>
+
+
+
+
+ 
+
+
+    </div>
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<li style="color:transparent"><a href="index.html" ><img src="assets/img/un-habitat_logo_high_resolution.png" width="125px"  /></a></li>
+
+						<nav class="links">
+							<ul>
+								<li><a href="index.html">Home</a></li>
+								<li class="menu">
+									<a  href="#menu">Spatial Profiling</a>
+								</li>
+
+							</ul>
+						</nav>
+
+					</header>
+
+				<!-- Menu -->
+					<section id="menu">
+
+	
+
+						<!-- Links -->
+							<section>
+								<ul class="links">
+									<li>
+										<a href="Turkana_Basemap.html">
+											<h3 style=>County Profiling</h3>
+											<p>Turkana County</p>
+										</a>
+									
+
+									
+										<li>
+										<a href="Kakuma_Basemap.html">
+											<h3 style="text-indent: 50px;">Settlement Profiling</h3>
+											<p style="text-indent: 50px;">Kakuma Kalobeyei</p>
+										</a>
+
+										</li>
+										<li>
+										<a href="Opportunity_Index.html">
+											<h3 style="text-indent: 100px;">Opportunity Index</h3>
+											<p style="text-indent: 100px;">Kakuma Kalobeyei</p>
+										</a>
+
+										</li>
+
+										<li>
+										<a href="M_Access.html">
+											<h3 style="text-indent: 100px;">Accessibility Map</h3>
+											<p style="text-indent: 100px;">Kakuma Kalobeyei</p>
+										</a>
+
+										</li>								
+									
+									<li>
+										<a href="#">
+											<h3>County Profiling</h3>
+											<p>Garissa County</p>
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											<h3 style="text-indent: 50px;">Settlement Profiling</h3>
+											<p style="text-indent: 50px;">Dadaab</p>
+										</a>
+									</li>
+									
+								</ul>
+							</section>
+
+		
+
+					</section>
+
+		
+
+					</section>
+
+
+				<!-- Main -->
+					<div id="main">
+
+						<!-- Post -->
+							<article class="post">
+								<header>
+									<div class="title">
+										<h3><a href="single.html">Humanitarian Development</a></h3>
+										<h3>Kenya spatial profiles</h3>
+										<p>Kakuma Kalobeyei Opportunity Index Analysis</p>
+									</div>
+									<div class="meta">
+										<time class="published" datetime="2015-11-01">November 13, 2020</time>
+										<a class="author"><span class="name">Un-Habitat</span><img src="assets/img/UNICON.png" alt="" /></a>
+									</div>
+								</header>
+								
+
+							
+
+
+								<a class="image featured" ><iframe src="assets/maps/html/kepler.gl (3).html" "width=100%" ></iframe></a>
+								<p>Mauris neque quam, fermentum ut nisl vitae, convallis maximus nisl. Sed mattis nunc id lorem euismod placerat. Vivamus porttitor magna enim, ac accumsan tortor cursus at. Phasellus sed ultricies mi non congue ullam corper. Praesent tincidunt sed tellus ut rutrum. Sed vitae justo condimentum, porta lectus vitae, ultricies congue gravida diam non fringilla.</p>
+
+							</article>
+								<!-- Cards Article -->
+								<article class="post">
+
+								<div class="row">
+										  <div class="column">
+										    <div class="card">
+										  <img src="assets/maps/static/Turkana.png"  alt="Avatar" style="width:100%">
+
+										    <h4><b>Turkana</b></h4> 
+										    <p>Basemap</p> 
+										   		<footer>
+													<ul>
+														<p><a href="Turkana_Basemap.html" class="button small" target="_blank">View</a></p>
+													</ul>
+												</footer>
+										    </div>
+										  </div>
+
+										  <div class="column">
+										    <div class="card">
+										  <img src="assets/maps/static/Kakuma2.png"  alt="Avatar" style="width:100%">
+
+										    <h4><b>Kakuma</b></h4> 
+										    <p>Basemap</p>
+										   		<footer>
+													<ul>
+														<p><a href="Kakuma_Basemap.html" class="button small" target="_blank">View</a></p>
+													</ul>
+												</footer> 
+										    </div>
+										  </div>
+										  
+										  <div class="column">
+										    <div class="card">
+										  <img src="assets/maps/static/kepler.png"  alt="Avatar" style="width:100%">
+										 
+										    <h4><b>Kakuma</b></h4> 
+										    <p>Accessibility Analysis</p>
+										   		<footer>
+													<ul>
+														<p><a href="M_Access.html" class="button small" target="_blank">View</a></p>
+													</ul>
+												</footer> 
+										    </div>
+										  </div>
+										  
+										  <div class="column">
+										    <div class="card">
+										  <img src="assets/maps/static/TI.png"  alt="Avatar" style="width:100%">
+
+										    <h4><b>Kakuma</b></h4> 
+										    <p>Opportunity Index</p> 
+										   		<footer>
+													<ul>
+														<p><a href="Opportunity_Index.html" class="button small" target="_blank">View</a></p>
+													</ul>
+												</footer>
+										    </div>
+										  </div>
+										</div>
+										<p>Mauris neque quam, fermentum ut nisl vitae, convallis maximus nisl. Sed mattis nunc id lorem euismod placerat. Vivamus porttitor magna enim, ac accumsan tortor cursus at. Phasellus sed ultricies mi non congue ullam corper. Praesent tincidunt sed tellus ut rutrum. Sed vitae justo condimentum, porta lectus vitae, ultricies congue gravida diam non fringilla.</p>
+
+
+
+				
+								</article>
+
+
+
+
+
+
+
+
+					</div>
+				
+
+						
+
+
+
+
+																<!-- Footer -->
+					<section id="footer">
+						<ul class="icons">
+							<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+							<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+							<li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+
+						</ul>
+						<p class="copyright"></a> &copy; 2020<a href="https://unhabitat.org/programme/planning-for-humanitarian-development-practice-connecting-normative-to-operations"> Settlement Profiles</a>. : <a href="https://unhabitat.org/">UNHABITAT</a>.</p>
+					</section>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>

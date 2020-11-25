@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8 />
+<title>Turkana Basemap</title>
+<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+<script src='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.js'></script>
+<link href='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.css' rel='stylesheet' />
+<style>
+  body { margin:0; padding:0; }
+  #map { position:absolute; top:0; bottom:0; width:100%; }
+</style>
+</head>
+<body>
+<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.2.0/leaflet-omnivore.min.js'></script>
+<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
+<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
+<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.2.0/leaflet-omnivore.min.js'></script>
+<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/leaflet.markercluster.js'></script>
+<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/MarkerCluster.css' rel='stylesheet' />
+<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/MarkerCluster.Default.css' rel='stylesheet' />
+<style>
+hr.beautiful-line{
+  border-top: 1px solid   black; 
+  border-style: dashed;
+  width: 100%;
+  background-position: center center;
+}
+hr.roads{
+  border-top: 1px solid red; 
+  width: 100%;
+  background-position: center center;
+}
+/*Legend specific*/
+.legend {
+  padding: 6px 8px;
+  font: 12px Arial, Helvetica, sans-serif;
+  background: white;
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  line-height: 30px;
+  color: black;
+}
+.legend h4 {
+  text-align: left;
+  color: black;
+}
+
+.legend span {
+  position: relative;
+  padding: 6px 12px;
+
+}
+.legend span-q {
+  position: relative;
+  padding: 120px 12px;
+
+
+}
+
+.legend i {
+  width: 25px;
+  height: 25px;
+  float: left;
+  margin: 0 8px 0 3px;
+  opacity: 1;
+  border: 2px solid white;
+box-shadow: 0 0 15px rgba(0,0,0, 0.4);
+}
+.legend i-a {
+  width: 10px;
+  height: 10px;
+  float: left;
+  margin: 0 16px 0 10.5px;
+  opacity: 1;
+  border: 2px solid white;
+  border-radius: 50%;
+box-shadow: 0 0 15px rgba(0,0,0, 0.4);
+}
+.legend i-b {
+  width: 15px;
+  height: 15px;
+  float: left;
+  margin: 0 13px 0 8.25px;
+  opacity: 1;
+  border: 2px solid white;
+  border-radius: 50%;
+box-shadow: 0 0 15px rgba(0,0,0, 0.4);
+}
+.legend i-c {
+  width: 20px;
+  height: 20px;
+  float: left;
+  margin: 0 9px 0 5.75px;
+  opacity: 1;
+  border: 2px solid white;
+  border-radius: 50%;
+box-shadow: 0 0 15px rgba(0,0,0, 0.4);
+}
+.legend i-d {
+  width: 25px;
+  height: 25px;
+  float: left;
+  margin: 0 5px 0 4.25px;
+  opacity: 1;
+  border: 2px solid white;
+  border-radius: 50%;
+box-shadow: 0 0 15px rgba(0,0,0, 0.4);
+}
+.legend i-e {
+  width: 35px;
+  height: 35px;
+  float: left;
+  margin: 0 3px 0 0px;
+  opacity: 1;
+  border: 2px solid white;
+  border-radius: 50%;
+box-shadow: 0 0 15px rgba(0,0,0, 0.4);
+}
+.legend i-f {
+    width: 100%;
+  height: 5px;
+  float: left;
+  margin: 0 0 -100px 0;
+  opacity: 1;
+  border: 2px solid white;
+
+}
+
+
+.legend .icon {
+  background-size: 20px;
+  background-color: rgba(255, 255, 255, 0);
+  background-position: center;
+}
+
+#loader {
+    position:absolute; top:0; bottom:0; width:100%;
+  	background-image: url("asset/img/Webp.net-resizeimage (2).gif");
+      background-color: rgba(255, 255, 255, 0);
+  	background-repeat:no-repeat;
+	background-position: center center;
+    transition:background 1s ease-out;
+    -webkit-transition:background 1s ease-out;
+}
+#loader.done {
+    background:rgba(255, 255, 255, 0);
+}
+#loader.hide {
+    display:none;
+}
+#loader .message {
+    position:absolute;
+    left:50%;
+    top:50%;
+}
+</style>
+<div id='map'></div>
+<div id='loader'><span class='message'></span></div>
+<script>
+L.mapbox.accessToken = 'pk.eyJ1IjoidW5ydW5ndW1hIiwiYSI6ImNraDMzdHFybDBsMGozMGxzbnNjODJrdWMifQ.xSO0uCJfC4jND_q5-b2TAA';
+var loader = document.getElementById('loader');
+
+var map = L.mapbox.map('map')
+    .setView([3.3122, 35.5658], 6.5)
+// start the loading screen
+startLoading();
+
+// Add a tile layer with a loading animation
+L.mapbox.styleLayer('mapbox://styles/unrunguma/ckhw8jy0914hx19pqe3aaem6o')
+
+    .addTo(map) // add your tiles to the map
+
+
+
+    .on('load', finishedLoading); // when the tiles load, remove the screen
+
+
+//Legend
+/*Legend specific*/
+var legend = L.control({ position: "bottomright" });
+
+legend.onAdd = function(map) {
+  var div = L.DomUtil.create("div", "legend");
+  div.innerHTML += "<u><h4>Legend</h4></u>";
+  div.innerHTML += '<i class="icon" style="background-image: url(map-icons-master_2/map-icons-master/src/icons/square.svg);background-repeat: no-repeat; background-size: 5px 5px"></i><span>Towns & TradingCenters</span><br>';
+
+  div.innerHTML += '<i class="icon" style="background-image: url(mapbox-maki-6.2.0-2-g7d8563e/mapbox-maki-7d8563e/icons/airfield-15.svg);background-repeat: no-repeat; background-size: 15px 15px"></i><span>Small Airfields</span><br>';
+    div.innerHTML += '<i class="icon" style="background-image: url(map-icons-master_2/map-icons-master/src/icons/airport.svg);background-repeat: no-repeat;"></i><span>Airfields</span><br>';
+  div.innerHTML += '<i class="icon" style="background-image: url(map-icons-master_2/map-icons-master/src/icons/map-pin.svg);background-repeat: no-repeat;"></i><span>Refugee Camps</span><br>';
+  div.innerHTML += '<i  ><hr class="roads"></i><span>Major Roads</span><br>';
+  div.innerHTML += '<i  ><hr class="beautiful-line"></i><span>Boundaries</span><br>';
+  div.innerHTML += '<i style="background:   rgb(0,0,0, 0.1)"></i><span>Turkana</span><br>';
+  div.innerHTML += '<i style="background:   rgb(0,0,0, 0.2)"></i><span>Turkana West</span><br>';
+  
+  
+
+  return div;
+};
+
+legend.addTo(map);
+
+
+// Turkana Boundary
+//using leaflet
+function c_boundaryareaStyle(){
+  return {
+    fillColor: 'rgb(0,0,0)',
+    weight: 0.3,
+    opacity: 1,
+    color: 'black',
+    dashArray: 5,
+    fillOpacity: 0.02,
+    smoothFactor:0
+ }
+ };
+
+var c_boundary = omnivore.kml('https://raw.githubusercontent.com/Runguma/spatialstorage/master/TW.kml')
+    .on('ready', function() {
+        this.setStyle(c_boundaryareaStyle);
+        map.fitBounds(c_boundary.getBounds());
+
+        // After the 'ready' event fires, the GeoJSON contents are accessible
+        // and you can iterate through layers to bind custom popups.
+        c_boundary.eachLayer(function(layer1) {
+            // See the `.bindPopup` documentation for full details. This
+            // dataset has a property called `name`: your dataset might not,
+            // so inspect it and customize to taste.
+                      
+                      layer1.bindPopup(layer1.feature.properties.NAME_2);
+                 
+
+        });
+    })
+    .addTo(map);
+// Turkana Boundary
+//using leaflet
+function d_boundaryareaStyle(){
+  return {
+    fillColor: 'rgb(0,0,0)',
+    weight: 0.25,
+    opacity: 1,
+    color: 'gray',
+    fillOpacity: 0.02,
+    smoothFactor:0
+ }
+ };
+
+var d_boundary = omnivore.kml('https://raw.githubusercontent.com/Runguma/spatialstorage/master/Turkana_West.kml')
+    .on('ready', function() {
+        this.setStyle(d_boundaryareaStyle);
+        map.fitBounds(d_boundary.getBounds());
+
+        // After the 'ready' event fires, the GeoJSON contents are accessible
+        // and you can iterate through layers to bind custom popups.
+        d_boundary.eachLayer(function(layer2) {
+            // See the `.bindPopup` documentation for full details. This
+            // dataset has a property called `name`: your dataset might not,
+            // so inspect it and customize to taste.
+                      
+                      layer2.bindPopup(layer2.feature.properties.NAME_2);
+                 
+
+        });
+    })
+    .addTo(map);
+
+// Turkana Roads
+//using leaflet
+function roadareaStyle(){
+  return {
+    fillColor: 'Black',
+    weight: 1,
+    opacity: 0.2,
+    color: 'red',
+    fillOpacity: 0,
+    smoothFactor:0
+ }
+ };
+
+var roads= omnivore.kml('https://raw.githubusercontent.com/Runguma/spatialstorage/master/Turkana_Roads.kml')
+    .on('ready', function() {
+        this.setStyle(roadareaStyle);
+        map.fitBounds(roads.getBounds());
+
+        // After the 'ready' event fires, the GeoJSON contents are accessible
+        // and you can iterate through layers to bind custom popups.
+        roads.eachLayer(function(layer3) {
+            // See the `.bindPopup` documentation for full details. This
+            // dataset has a property called `name`: your dataset might not,
+            // so inspect it and customize to taste.
+                      
+                     // layer.bindPopup(layer.feature.properties.NAME_2);
+                 
+
+        });
+    })
+    .addTo(map);
+
+//Trading centers
+//Objects.
+var TradingCenters = L.icon({
+    iconUrl: 'map-icons-master_2/map-icons-master/src/icons/square.svg',
+    iconSize:     [4, 4],
+
+   
+});
+
+var tradingcentersmarker = omnivore.kml('https://raw.githubusercontent.com/Runguma/spatialstorage/master/Turkana_Trading_Centers.kml')
+    .on('ready', function() {
+        tradingcentersmarker.eachLayer(function(layer) {
+
+            if (layer instanceof L.Marker) {
+                layer.setIcon(TradingCenters);
+            }
+                      
+                      layer.bindPopup(layer.feature.properties.TOWN);
+
+        });
+    })
+    .addTo(map);
+
+// Camp
+
+
+
+var RefugeeCamps= L.icon({
+    iconUrl: 'map-icons-master_2/map-icons-master/src/icons/map-pin.svg',
+    iconSize:     [25, 29],
+
+    popupAnchor:  [-3, -76] 
+});
+
+var RefugeeCampsmarker = omnivore.kml('https://raw.githubusercontent.com/Runguma/spatialstorage/master/Turkana_Refugee_Camps.kml')
+    .on('ready', function() {
+        RefugeeCampsmarker.eachLayer(function(layer) {
+
+            if (layer instanceof L.Marker) {
+                layer.setIcon(RefugeeCamps);
+            }
+                      
+                      layer.bindPopup(layer.feature.properties.Id);
+
+        });
+    });
+
+var markers = L.markerClusterGroup({
+  showCoverageOnHover: false
+});
+
+map.addLayer(markers);
+
+RefugeeCampsmarker.on('ready', function () {
+  console.log(RefugeeCampsmarker.getLayers().length)
+  markers.addLayer(RefugeeCampsmarker);
+});
+
+
+//Airfields
+
+var Airfields= L.icon({
+    iconUrl: 'map-icons-master_2/map-icons-master/src/icons/airport.svg',
+    iconSize:     [12, 16],
+
+    popupAnchor:  [-3, -76] 
+});
+
+var Airfieldsmarker = omnivore.kml('https://raw.githubusercontent.com/Runguma/spatialstorage/master/Turkana_Medium_Airfields.kml')
+    .on('ready', function() {
+        Airfieldsmarker.eachLayer(function(layer) {
+
+            if (layer instanceof L.Marker) {
+                layer.setIcon(Airfields);
+            }
+             //layer.bindPopup(layer.feature.properties.Level);
+        });
+    })
+    .addTo(map);
+var SmallAirfields= L.icon({
+    iconUrl: 'mapbox-maki-6.2.0-2-g7d8563e/mapbox-maki-7d8563e/icons/airfield-15.svg',
+    iconSize:     [6, 10],
+
+    popupAnchor:  [-3, -76] 
+});
+
+var SmallAirfieldsmarker = omnivore.kml('https://raw.githubusercontent.com/Runguma/spatialstorage/master/Turkana_Small_Airfields.kml')
+    .on('ready', function() {
+        SmallAirfieldsmarker.eachLayer(function(layer) {
+
+            if (layer instanceof L.Marker) {
+                layer.setIcon(SmallAirfields);
+            }
+             //layer.bindPopup(layer.feature.properties.Level);
+        });
+    })
+    .addTo(map);
+
+//Controls
+
+
+L.mapbox.geocoderControl('mapbox.places')
+    .addTo(map)
+
+
+
+
+
+
+//Loading JS
+function startLoading() {
+    loader.className = '';
+}
+
+function finishedLoading() {
+    // first, toggle the class 'done', which makes the loading screen
+    // fade out
+    loader.className = 'done';
+    setTimeout(function() {
+        // then, after a half-second, add the class 'hide', which hides
+        // it completely and ensures that the user can interact with the
+        // map again.
+        loader.className = 'hide';
+    }, 500);
+}
+</script>
+</body>
+</html>
